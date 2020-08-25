@@ -18,11 +18,11 @@ repositories {
 dependencies {
     compileOnly(Dependencies.Spigot.api)
     compileOnly(Dependencies.Spigot.annotations)
+    kapt(Dependencies.Spigot.annotations)
     compile(Dependencies.Kotlin.stdlib)
     compile(Dependencies.Kotlin.reflect)
     compile(Dependencies.Rx.java)
     testCompile(Dependencies.JUnit.core)
-    kapt("$group:$pluginName:$version")
 }
 
 buildscript {

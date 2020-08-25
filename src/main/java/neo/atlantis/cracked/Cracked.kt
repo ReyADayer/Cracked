@@ -1,6 +1,7 @@
 package neo.atlantis.cracked
 
 import neo.atlantis.cracked.command.CrackCommand
+import neo.atlantis.cracked.listener.BlockListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.annotation.command.Command
 import org.bukkit.plugin.java.annotation.command.Commands
@@ -20,7 +21,9 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author
 )
 class Cracked : JavaPlugin() {
     override fun onEnable() {
-        getCommand(PluginCommands.CRACK)?.setExecutor(CrackCommand(this))
+        getCommand(PluginCommands.CRACK)?.executor = CrackCommand(this)
+
+        server.pluginManager.registerEvents(BlockListener(), this)
     }
 
     override fun onDisable() {
