@@ -30,16 +30,27 @@ class ShockWave(private val entity: Entity, private val plugin: JavaPlugin) : Sk
     override fun execute() {
         val location = entity.location
         location.playSound(Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.933f)
+        Observable.interval(2, TimeUnit.SECONDS)
+                .take(2)
+                .doOnNext {
+                    impulse(location)
+                }.subscribe()
+    }
+
+    private fun impulse(location: Location) {
         Observable.interval(100, TimeUnit.MILLISECONDS)
                 .take(40)
-                .doOnNext {
-                    val angle = 2 * Math.PI * it / 30
-                    val circleRadius = radius + it / 4.0
-                    drawCircle(location, circleRadius, angle)
-                    drawCircle(location, circleRadius, angle + Math.PI / 2)
-                    drawCircle(location, circleRadius, angle + 2 * Math.PI / 2)
-                    drawCircle(location, circleRadius, angle + 3 * Math.PI / 2)
-                    drawAura(location, it)
+                .doOnNext { data ->
+                    val circleRadius = radius + data / 4.0
+                    val count: Int = if (data < 8L) {
+                        8
+                    } else {
+                        data.toInt()
+                    }
+                    repeat(count) {
+                        drawCircle(location, circleRadius, 2.0 * it.toDouble() * Math.PI / count.toDouble())
+                    }
+                    drawAura(location, data)
                 }.subscribe()
     }
 
@@ -49,7 +60,7 @@ class ShockWave(private val entity: Entity, private val plugin: JavaPlugin) : Sk
                 val currentLocation = LocationUtil.convertToPolarCoordinates(location, radius, angle)
                 val material = currentLocation.block.getRelative(BlockFace.DOWN).type
                 currentLocation.spawnFallingBlock(material)?.apply {
-                    velocity = Vector(0.0, 0.5, 0.0)
+                    velocity = Vector(0.0, 0.3, 0.0)
                     setBooleanMetadata(plugin, MetadataKeys.IS_CRACKED_BLOCK, true)
                 }
                 effect(currentLocation, range)
