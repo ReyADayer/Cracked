@@ -30,7 +30,7 @@ class ShockWave(private val entity: Entity, private val plugin: JavaPlugin) : Sk
     override fun execute() {
         val location = entity.location
         location.playSound(Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.933f)
-        Observable.interval(100, TimeUnit.SECONDS)
+        Observable.interval(100, TimeUnit.MILLISECONDS)
                 .take(20)
                 .doOnNext {
                     if(it % 10 == 0L){
