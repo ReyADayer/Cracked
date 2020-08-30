@@ -61,6 +61,7 @@ class ShockWave(private val entity: Entity, private val plugin: JavaPlugin) : Sk
                 val material = currentLocation.block.getRelative(BlockFace.DOWN).type
                 currentLocation.spawnFallingBlock(material)?.apply {
                     velocity = Vector(0.0, 0.3, 0.0)
+                    dropItem = false
                     setBooleanMetadata(plugin, MetadataKeys.IS_CRACKED_BLOCK, true)
                 }
                 effect(currentLocation, range)
